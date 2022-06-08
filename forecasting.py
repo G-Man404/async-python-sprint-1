@@ -3,15 +3,13 @@
 # import subprocess
 # import multiprocessing
 
-
-from external.client import YandexWeatherAPI
+from utils import YandexWeatherAPI, CITIES
 from tasks import (
     DataFetchingTask,
     DataCalculationTask,
     DataAggregationTask,
     DataAnalyzingTask,
 )
-from utils import CITIES, get_url_by_city_name
 
 
 def forecast_weather():
@@ -19,9 +17,8 @@ def forecast_weather():
     Анализ погодных условий по городам
     """
     # city_name = "MOSCOW"
-    # url_with_data = get_url_by_city_name(city_name)
-    # resp = YandexWeatherAPI.get_forecasting(url_with_data)
-    # print(resp)
+    # ywAPI = YandexWeatherAPI()
+    # resp = ywAPI.get_forecasting(city_name)
     pass
 
 
