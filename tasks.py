@@ -36,9 +36,9 @@ class DataCalculationTask:
         treads = []
         with ThreadPoolExecutor(max_workers=4) as pool:
             for weather_day in self.weather_data:
-                treads.append(pool.submit(analyze_json, weather_day))
+                treads.append([weather_day[0], pool.submit(analyze_json, weather_day[1])])
         for tread in treads:
-            self.analyzed_data.append(tread.result())
+            self.analyzed_data.append([tread[0], tread[1].result()])
 
 
 class DataAggregationTask:
