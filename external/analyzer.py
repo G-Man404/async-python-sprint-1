@@ -176,6 +176,8 @@ class DayInfo:
 
 
 def analyze_json(data):
+    city = data[0]
+    data = data[1]
     if not data:
         logging.warning("Input data is empty...")
         return {}
@@ -199,7 +201,7 @@ def analyze_json(data):
     result = DEFAULT_OUTPUT_RESULT
     # result[OUTPUT_RAW_DATA_KEY] = data
     result[OUTPUT_DAYS_KEY] = days
-    return result
+    return city, result
 
 
 if __name__ == "__main__":

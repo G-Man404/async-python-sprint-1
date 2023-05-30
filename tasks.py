@@ -1,7 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor
+import json
 
 import utils
 from external.client import *
+from external.analyzer import *
 
 
 class DataFetchingTask:
@@ -11,7 +13,8 @@ class DataFetchingTask:
 
     def get_weather_by_url(self, city: str, url: str):
         weather_in_city = YandexWeatherAPI.get_forecasting(url)
-        self.cities_weather.append([city, weather_in_city])
+        weather_in_city_json = json.loads(weather_in_city)
+        self.cities_weather.append([city, weather_in_city_json])
 
     def update_weather_date(self):
         with ThreadPoolExecutor(max_workers=4) as pool:
@@ -25,7 +28,17 @@ class DataFetchingTask:
 
 
 class DataCalculationTask:
-    pass
+    def __init__(self, weather_data: list):
+        self.weather_data = weather_data
+        self.analyzed_data = []
+
+    def calculation(self):
+        treads = []
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            for weather_day in self.weather_data:
+                treads.append(pool.submit(analyze_json, weather_day))
+        for tread in treads:
+            self.analyzed_data.append(tread.result())
 
 
 class DataAggregationTask:
