@@ -109,8 +109,7 @@ class DataAggregationTask:
 
                     writer.writerow(row_1)
                     writer.writerow(row_2)
-                    logging.info("save_to_csv completed successfully")
-
+            logging.info("save_to_csv completed successfully")
 
         except Exception as ex:
             logging.error(ex)
@@ -133,6 +132,7 @@ class DataAnalyzingTask:
             n += 1
         logging.info("analyzing completed successfully")
         return city_rating
+
 
 if __name__ == "__main__":
     Weather = WeatherData()
