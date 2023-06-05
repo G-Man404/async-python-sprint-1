@@ -2,7 +2,6 @@ import json
 import logging
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
-from pprint import pprint
 import csv
 import datetime
 
@@ -56,7 +55,7 @@ class DataFetchingTask:
 
 class DataCalculationTask:
     @staticmethod
-    def calculation_weather_data(json_raw_data: dict):
+    def calculation_weather_data(json_raw_data: list):
         logging.info("data calculation has started")
         processes = {}
         with multiprocessing.Pool() as pool:
@@ -136,10 +135,10 @@ class DataAnalyzingTask:
 
 
 if __name__ == "__main__":
-    Weather = WeatherData()
-    Weather.cities = utils.CITIES
-    Weather.json_raw_data = DataFetchingTask.update_weather_data(Weather.cities)
-    Weather.json_analyzed_data = DataCalculationTask.calculation_weather_data(Weather.json_raw_data)
-    Weather.rating = DataAnalyzingTask.analyzing(Weather.json_analyzed_data)
-    DataAggregationTask.save_to_csv(Weather.json_analyzed_data, Weather.rating)
-    DataAggregationTask.save_to_json(Weather.json_analyzed_data)
+    cities = utils.CITIES
+    json_raw_data = DataFetchingTask.update_weather_data(cities)
+    json_analyzed_data = DataCalculationTask.calculation_weather_data(json_raw_data)
+    rating = DataAnalyzingTask.analyzing(json_analyzed_data)
+    DataAggregationTask.save_to_csv(json_analyzed_data, rating)
+    DataAggregationTask.save_to_json(json_analyzed_data)
+    logging.info(f"The most favorable city for a trip: {list(rating.keys())[0]}")
