@@ -70,7 +70,6 @@ class DataCalculationTask:
         logging.info("data calculation completed successfully")
         return weather_data
 
-
 class DataAggregationTask:
     @staticmethod
     def save_to_json(json_data: dict):
