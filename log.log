@@ -1,15 +1,15 @@
-2023-06-05 15:57:25,230: root - INFO - data update has started
-2023-06-05 15:57:25,657: root - ERROR - HTTP Error 404: Not Found
-2023-06-05 15:57:25,657: root - WARNING - Failed to get data on the GIZA
-2023-06-05 15:57:25,711: root - ERROR - Extra data: line 19 column 4 (char 328)
-2023-06-05 15:57:25,711: root - WARNING - Failed to get data on the TORONTO
-2023-06-05 15:57:25,711: root - INFO - data update completed successfully
-2023-06-05 15:57:25,712: root - INFO - data calculation has started
-2023-06-05 15:57:25,737: root - WARNING - Input data is empty...
-2023-06-05 15:57:25,739: root - INFO - data calculation completed successfully
-2023-06-05 15:57:25,739: root - INFO - analyzing has started
-2023-06-05 15:57:25,739: root - INFO - analyzing completed successfully
-2023-06-05 15:57:25,739: root - INFO - save_to_csv has started
-2023-06-05 15:57:25,740: root - INFO - save_to_csv completed successfully
-2023-06-05 15:57:25,740: root - INFO - save_to_json has started
-2023-06-05 15:57:25,741: root - INFO - save_to_json completed successfully
+2023-06-05 22:10:21,586: root - INFO - data update has started
+2023-06-05 22:10:21,958: root - ERROR - HTTP Error 404: Not Found
+2023-06-05 22:10:21,958: root - WARNING - Failed to get data on the GIZA
+2023-06-05 22:10:21,974: root - ERROR - Extra data: line 19 column 4 (char 328)
+2023-06-05 22:10:21,974: root - WARNING - Failed to get data on the TORONTO
+2023-06-05 22:10:22,021: root - INFO - data calculation has started
+2023-06-05 22:10:22,045: root - WARNING - Input data is empty...
+2023-06-05 22:10:22,046: root - INFO - data calculation completed successfully
+2023-06-05 22:10:22,048: root - INFO - analyzing has started
+2023-06-05 22:10:22,048: root - INFO - analyzing completed successfully
+2023-06-05 22:10:22,048: root - INFO - save_to_csv has started
+2023-06-05 22:10:22,050: root - INFO - save_to_csv completed successfully
+2023-06-05 22:10:22,050: root - INFO - save_to_json has started
+2023-06-05 22:10:22,050: root - INFO - save_to_json completed successfully
+2023-06-05 22:10:22,050: root - INFO - The most favorable city for a trip: ABUDHABI

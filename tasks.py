@@ -2,7 +2,6 @@ import json
 import logging
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
-from pprint import pprint
 import csv
 import datetime
 
@@ -18,56 +17,43 @@ logging.basicConfig(
 )
 
 
-class WeatherData:
-    def __init__(self):
-        self.cities = []
-        self.json_raw_data = []
-        self.json_analyzed_data = []
-        self.rating = []
-
 
 class DataFetchingTask:
     @staticmethod
-    def update_city_weather(city: tuple[str, str]):
+    def update_city_weather(city: tuple[str, str], queue: multiprocessing.Queue):
         city_key, city_value = city
         try:
             weather_data = client.YandexWeatherAPI.get_forecasting(city_value)
-            return [city_key, weather_data]
+            queue.put([city_key, weather_data])
         except:
             logging.warning(f"Failed to get data on the {city_key}")
 
     @staticmethod
-    def update_weather_data(cities: dict):
+    def update_weather_data(cities: dict, queue: multiprocessing.Queue):
         logging.info("data update has started")
-        treads = []
         with ThreadPoolExecutor(4) as pool:
             for city in cities.items():
-                tread = pool.submit(DataFetchingTask.update_city_weather, city)
-                treads.append(tread)
-
-        weather_data = []
-        for tread in treads:
-            weather = tread.result()
-            if weather is not None:
-                weather_data.append(tread.result())
-        logging.info("data update completed successfully")
-        return weather_data
+                pool.submit(DataFetchingTask.update_city_weather, city, queue)
 
 
 class DataCalculationTask:
     @staticmethod
-    def calculation_weather_data(json_raw_data: dict):
+    def calculation_weather_data(queue: multiprocessing.Queue):
         logging.info("data calculation has started")
         processes = {}
         with multiprocessing.Pool() as pool:
-            for city in json_raw_data:
-                process = pool.apply(analyzer.analyze_json, [city[1]])
-                processes[city[0]] = process
+            while True:
+                if queue.empty():
+                    logging.info("data calculation completed successfully")
+                    break
+                else:
+                    city = queue.get()
+                    process = pool.apply(analyzer.analyze_json, [city[1]])
+                    processes[city[0]] = process
         weather_data = {}
         for city, process in processes.items():
             if len(process.keys()) != 0:
                 weather_data[city] = process
-        logging.info("data calculation completed successfully")
         return weather_data
 
 class DataAggregationTask:
@@ -135,10 +121,11 @@ class DataAnalyzingTask:
 
 
 if __name__ == "__main__":
-    Weather = WeatherData()
-    Weather.cities = utils.CITIES
-    Weather.json_raw_data = DataFetchingTask.update_weather_data(Weather.cities)
-    Weather.json_analyzed_data = DataCalculationTask.calculation_weather_data(Weather.json_raw_data)
-    Weather.rating = DataAnalyzingTask.analyzing(Weather.json_analyzed_data)
-    DataAggregationTask.save_to_csv(Weather.json_analyzed_data, Weather.rating)
-    DataAggregationTask.save_to_json(Weather.json_analyzed_data)
+    cities = utils.CITIES
+    queue = multiprocessing.Queue()
+    DataFetchingTask.update_weather_data(cities, queue)
+    json_analyzed_data = DataCalculationTask.calculation_weather_data(queue)
+    rating = DataAnalyzingTask.analyzing(json_analyzed_data)
+    DataAggregationTask.save_to_csv(json_analyzed_data, rating)
+    DataAggregationTask.save_to_json(json_analyzed_data)
+    logging.info(f"The most favorable city for a trip: {list(rating.keys())[0]}")
