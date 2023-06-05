@@ -187,9 +187,17 @@ def analyze_json(data):
     days_data = deep_getitem(data, INPUT_FORECAST_PATH)
     days = []
     # ToDo force sort by day in asc mode
+    temperature = 0
+    relevant_condition_hours = 0
     for day_data in days_data:
         d_info = DayInfo(raw_data=day_data)
         d_date = d_info.date
+
+        if type(d_info.temperature_avg) is float:
+            temperature += d_info.temperature_avg
+        if type(d_info.relevant_condition_hours) is int:
+            relevant_condition_hours += d_info.relevant_condition_hours
+
 
         time_start = time_start or d_date
         time_end = d_date
@@ -199,6 +207,8 @@ def analyze_json(data):
     result = DEFAULT_OUTPUT_RESULT
     # result[OUTPUT_RAW_DATA_KEY] = data
     result[OUTPUT_DAYS_KEY] = days
+    result["avg_temperature"] = temperature/len(days)
+    result["avg_relevant_condition_hours"] = relevant_condition_hours/len(days)
     return result
 
 
